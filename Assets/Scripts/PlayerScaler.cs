@@ -14,6 +14,7 @@ public class PlayerScaler : MonoBehaviour
 	private Vector3 smallLocation;
 	public TeleportArea[] smallTeleportZones;
 	public TeleportArea[] bigTeleportZones;
+	public TeleportArea[] movableTeleportZones;
 	private void Start()
 	{
 		bigLocation = vrRig.position;
@@ -51,7 +52,6 @@ public class PlayerScaler : MonoBehaviour
 		foreach (TeleportArea zone in smallTeleportZones)
 		{
 			zone.SetLocked(!isSmall);
-			Debug.Log(zone);
 		}
 		foreach (TeleportArea zone in bigTeleportZones)
 		{
@@ -59,24 +59,29 @@ public class PlayerScaler : MonoBehaviour
 		}
 	}
 
+	void SwapLocations(ref Vector3 location1, ref Vector3 location2)
+	{
+		Vector3 temp = location1;
+		location1 = vrRig.position;
+		location2 = temp;
+	}
+
 	void ToggleSize()
 	{
 		if (isSmall)
 		{
-			smallLocation = vrRig.position;
+			SwapLocations(ref smallLocation, ref bigLocation);
 			ChangeSize(largeScale);
-
-			vrRig.position = bigLocation;
-			isSmall = false;
 		}
 		else
 		{
-			bigLocation = vrRig.position;
+			SwapLocations(ref bigLocation, ref smallLocation);
 			ChangeSize(smallScale);
-
-			vrRig.position = smallLocation;
-			isSmall = true;
 		}
+
 		ChangeTeleportZones(isSmall);
+
+		vrRig.position = isSmall ? smallLocation : bigLocation;
+		isSmall = !isSmall;
 	}
 }

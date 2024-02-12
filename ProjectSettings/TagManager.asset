@@ -12,6 +12,7 @@ TagManager:
   - FxTemporaire
   - SmallTeleportZone
   - BigTeleportZone
+  - MovableTeleport
   layers:
   - Default
   - TransparentFX
