@@ -1,4 +1,7 @@
+using System.Linq;
+using Unity.XR.CoreUtils;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class PlayerScaler : MonoBehaviour
 {
@@ -9,9 +12,20 @@ public class PlayerScaler : MonoBehaviour
 	private bool isSmall = true; // Initial size state
 	private Vector3 bigLocation;
 	private Vector3 smallLocation;
+	public TeleportArea[] smallTeleportZones;
+	public TeleportArea[] bigTeleportZones;
 	private void Start()
 	{
-		ToggleSize();
+		bigLocation = vrRig.position;
+		vrRig.position = new Vector3(-5.67f, 0.1f, -4.54f);
+		ChangeSize(smallScale);
+
+		// GameObject[] teleportSmallObjects = GameObject.FindGameObjectsWithTag("SmallTeleportZone");
+		// GameObject[] teleportBigObjects = GameObject.FindGameObjectsWithTag("BigTeleportZone");
+		// smallTeleportZones = teleportSmallObjects.Select(x => x.GetComponentInChildren<TeleportArea>()).ToArray();
+		// bigTeleportZones = teleportBigObjects.Select(x => x.GetComponentInChildren<TeleportArea>()).ToArray();
+
+		ChangeTeleportZones(isSmall);
 	}
 	void Update()
 	{
@@ -21,39 +35,48 @@ public class PlayerScaler : MonoBehaviour
 		}
 	}
 
+	private void ChangeSize(float scale)
+	{
+		vrRig.localScale = Vector3.one * scale;
+		foreach (Transform t in otherToScale)
+		{
+			t.localScale = Vector3.one * scale;
+		}
+	}
+
+
+
+	private void ChangeTeleportZones(bool isSmall)
+	{
+		foreach (TeleportArea zone in smallTeleportZones)
+		{
+			zone.SetLocked(!isSmall);
+			Debug.Log(zone);
+		}
+		foreach (TeleportArea zone in bigTeleportZones)
+		{
+			zone.SetLocked(isSmall);
+		}
+	}
+
 	void ToggleSize()
 	{
 		if (isSmall)
 		{
-			// Save small location before changing size
 			smallLocation = vrRig.position;
+			ChangeSize(largeScale);
 
-			// Change to large size
-			vrRig.localScale = Vector3.one * largeScale;
-			foreach (Transform t in otherToScale)
-			{
-				t.localScale = Vector3.one * largeScale;
-			}
-
-			// Restore to big location after changing size
 			vrRig.position = bigLocation;
 			isSmall = false;
 		}
 		else
 		{
-			// Save big location before changing size
 			bigLocation = vrRig.position;
+			ChangeSize(smallScale);
 
-			// Change to small size
-			vrRig.localScale = Vector3.one * smallScale;
-			foreach (Transform t in otherToScale)
-			{
-				t.localScale = Vector3.one * smallScale;
-			}
-
-			// Restore to small location after changing size
 			vrRig.position = smallLocation;
 			isSmall = true;
 		}
+		ChangeTeleportZones(isSmall);
 	}
 }

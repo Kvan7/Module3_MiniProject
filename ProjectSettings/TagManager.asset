@@ -8,6 +8,10 @@ TagManager:
   - hand
   - Terrain
   - Bloon
+  - projectile
+  - FxTemporaire
+  - SmallTeleportZone
+  - BigTeleportZone
   layers:
   - Default
   - TransparentFX
