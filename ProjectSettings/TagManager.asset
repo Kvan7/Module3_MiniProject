@@ -13,6 +13,7 @@ TagManager:
   - SmallTeleportZone
   - BigTeleportZone
   - MovableTeleport
+  - SmallInteract
   layers:
   - Default
   - TransparentFX

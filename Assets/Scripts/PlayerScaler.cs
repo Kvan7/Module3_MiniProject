@@ -1,4 +1,5 @@
 using System.Linq;
+using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
@@ -9,7 +10,7 @@ public class PlayerScaler : MonoBehaviour
 	public Transform[] otherToScale; // Assign any other objects you want to scale here in the inspector
 	public float smallScale = 0.1f; // The scale for being "really small"
 	public float largeScale = 2f; // The scale for being "really big"
-	private bool isSmall = true; // Initial size state
+	private bool isBig = false; // Initial size state
 	private Vector3 bigLocation;
 	private Vector3 smallLocation;
 	private TeleportArea[] smallTeleportZones;
@@ -32,8 +33,10 @@ public class PlayerScaler : MonoBehaviour
 		movableTeleportZones = GameObject.FindGameObjectsWithTag("MovableTeleport")
 			.SelectMany(obj => obj.GetComponentsInChildren<TeleportArea>(true))
 			.ToArray();
-		ChangeTeleportZones(!isSmall);
+		ChangeTeleportZones(isBig);
+		ToggleInteractable(isBig);
 	}
+
 	void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space)) // Change KeyCode.Space to your desired input
@@ -51,28 +54,40 @@ public class PlayerScaler : MonoBehaviour
 		}
 	}
 
+	private void ToggleInteractable(bool isBig)
+	{
+		Debug.Log("isBig:" + isBig);
+		foreach (ActuallyThrowable throwable in FindObjectsOfType<ActuallyThrowable>())
+		{
+			if (!throwable.gameObject.CompareTag("SmallInteract"))
+			{
+				throwable.enabled = isBig;
+			}
+		}
+	}
 
-
-	private void ChangeTeleportZones(bool isSmall)
+	private void ChangeTeleportZones(bool isBig)
 	{
 		foreach (TeleportArea zone in smallTeleportZones)
 		{
-			zone.SetLocked(isSmall);
+			zone.SetLocked(isBig);
 		}
 		foreach (TeleportArea zone in bigTeleportZones)
 		{
-			zone.SetLocked(!isSmall);
+			zone.SetLocked(!isBig);
 		}
 		foreach (TeleportArea zone in movableTeleportZones)
 		{
-			zone.SetLocked(isSmall);
+			zone.SetLocked(isBig);
 		}
 	}
 
 	void ToggleSize()
 	{
-		ChangeTeleportZones(isSmall);
-		if (isSmall)
+		isBig = !isBig;
+		ChangeTeleportZones(isBig);
+		ToggleInteractable(isBig);
+		if (isBig)
 		{
 			smallLocation = vrRig.position;
 			ChangeSize(largeScale);
@@ -86,6 +101,5 @@ public class PlayerScaler : MonoBehaviour
 
 			vrRig.position = smallLocation;
 		}
-		isSmall = !isSmall;
 	}
 }

@@ -69,7 +69,7 @@ public class LazerPickup : MonoBehaviour
 			if (!interactable.attachedToHand)
 			{
 				// Attach the object to the hand
-				hand.AttachObject(interactable.gameObject, GrabTypes.Grip, Hand.AttachmentFlags.ParentToHand);
+				hand.AttachObject(interactable.gameObject, GrabTypes.Grip);
 			}
 		}
 	}
