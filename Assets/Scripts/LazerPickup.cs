@@ -36,7 +36,7 @@ public class LazerPickup : MonoBehaviour
 			interactable = other.GetComponentInParent<Interactable>();
 		}
 
-		if (interactable != null)
+		if (interactable != null && interactable.gameObject.GetComponent<ActuallyThrowable>().enabled)
 		{
 			meshRenderer.material = interactMaterial;
 		}
@@ -66,10 +66,12 @@ public class LazerPickup : MonoBehaviour
 		if (interactable != null && lazerAction[hand.handType].stateDown)
 		{
 			// If the interactable object is not already grabbed
-			if (!interactable.attachedToHand)
+			if (!interactable.attachedToHand && interactable.gameObject.GetComponent<ActuallyThrowable>().enabled)
 			{
 				// Attach the object to the hand
 				hand.AttachObject(interactable.gameObject, GrabTypes.Grip);
+				meshRenderer.material = defaultMaterial;
+				gameObject.SetActive(false);
 			}
 		}
 	}

@@ -10,6 +10,8 @@ public class PlayerScaler : MonoBehaviour
 	public Transform[] otherToScale; // Assign any other objects you want to scale here in the inspector
 	public float smallScale = 0.1f; // The scale for being "really small"
 	public float largeScale = 2f; // The scale for being "really big"
+	public Transform smallStartLocation;
+	public Transform bigStartLocation;
 	private bool isBig = false; // Initial size state
 	private Vector3 bigLocation;
 	private Vector3 smallLocation;
@@ -18,8 +20,8 @@ public class PlayerScaler : MonoBehaviour
 	private TeleportArea[] movableTeleportZones;
 	private void Start()
 	{
-		bigLocation = vrRig.position;
-		vrRig.position = new Vector3(-5.67f, 0.1f, -4.54f);
+		bigLocation = bigStartLocation.position;
+		vrRig.position = smallStartLocation.position;
 		ChangeSize(smallScale);
 
 		smallTeleportZones = GameObject.FindGameObjectsWithTag("SmallTeleportZone")
@@ -52,6 +54,8 @@ public class PlayerScaler : MonoBehaviour
 		{
 			t.localScale = Vector3.one * scale;
 		}
+		// Also change gravity
+		Physics.gravity = new Vector3(0, -9.81f * scale, 0);
 	}
 
 	private void ToggleInteractable(bool isBig)
@@ -62,6 +66,7 @@ public class PlayerScaler : MonoBehaviour
 			if (!throwable.gameObject.CompareTag("SmallInteract"))
 			{
 				throwable.enabled = isBig;
+				throwable.gameObject.GetComponent<Interactable>().highlightOnHover = isBig;
 			}
 		}
 	}
