@@ -105,6 +105,14 @@ namespace Valve.VR
             }
         }
         
+        public virtual SteamVR_Action_Boolean GrabLazer
+        {
+            get
+            {
+                return SteamVR_Actions.default_GrabLazer;
+            }
+        }
+        
         public virtual SteamVR_Action_Vibration Haptic
         {
             get

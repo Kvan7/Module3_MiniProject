@@ -12,21 +12,27 @@ public class PlayerScaler : MonoBehaviour
 	private bool isSmall = true; // Initial size state
 	private Vector3 bigLocation;
 	private Vector3 smallLocation;
-	public TeleportArea[] smallTeleportZones;
-	public TeleportArea[] bigTeleportZones;
-	public TeleportArea[] movableTeleportZones;
+	private TeleportArea[] smallTeleportZones;
+	private TeleportArea[] bigTeleportZones;
+	private TeleportArea[] movableTeleportZones;
 	private void Start()
 	{
 		bigLocation = vrRig.position;
 		vrRig.position = new Vector3(-5.67f, 0.1f, -4.54f);
 		ChangeSize(smallScale);
 
-		// GameObject[] teleportSmallObjects = GameObject.FindGameObjectsWithTag("SmallTeleportZone");
-		// GameObject[] teleportBigObjects = GameObject.FindGameObjectsWithTag("BigTeleportZone");
-		// smallTeleportZones = teleportSmallObjects.Select(x => x.GetComponentInChildren<TeleportArea>()).ToArray();
-		// bigTeleportZones = teleportBigObjects.Select(x => x.GetComponentInChildren<TeleportArea>()).ToArray();
+		smallTeleportZones = GameObject.FindGameObjectsWithTag("SmallTeleportZone")
+			.SelectMany(obj => obj.GetComponentsInChildren<TeleportArea>(true))
+			.ToArray();
 
-		ChangeTeleportZones(isSmall);
+		bigTeleportZones = GameObject.FindGameObjectsWithTag("BigTeleportZone")
+			.SelectMany(obj => obj.GetComponentsInChildren<TeleportArea>(true))
+			.ToArray();
+
+		movableTeleportZones = GameObject.FindGameObjectsWithTag("MovableTeleport")
+			.SelectMany(obj => obj.GetComponentsInChildren<TeleportArea>(true))
+			.ToArray();
+		ChangeTeleportZones(!isSmall);
 	}
 	void Update()
 	{
@@ -51,37 +57,35 @@ public class PlayerScaler : MonoBehaviour
 	{
 		foreach (TeleportArea zone in smallTeleportZones)
 		{
-			zone.SetLocked(!isSmall);
+			zone.SetLocked(isSmall);
 		}
 		foreach (TeleportArea zone in bigTeleportZones)
+		{
+			zone.SetLocked(!isSmall);
+		}
+		foreach (TeleportArea zone in movableTeleportZones)
 		{
 			zone.SetLocked(isSmall);
 		}
 	}
 
-	void SwapLocations(ref Vector3 location1, ref Vector3 location2)
-	{
-		Vector3 temp = location1;
-		location1 = vrRig.position;
-		location2 = temp;
-	}
-
 	void ToggleSize()
 	{
+		ChangeTeleportZones(isSmall);
 		if (isSmall)
 		{
-			SwapLocations(ref smallLocation, ref bigLocation);
+			smallLocation = vrRig.position;
 			ChangeSize(largeScale);
+
+			vrRig.position = bigLocation;
 		}
 		else
 		{
-			SwapLocations(ref bigLocation, ref smallLocation);
+			bigLocation = vrRig.position;
 			ChangeSize(smallScale);
+
+			vrRig.position = smallLocation;
 		}
-
-		ChangeTeleportZones(isSmall);
-
-		vrRig.position = isSmall ? smallLocation : bigLocation;
 		isSmall = !isSmall;
 	}
 }
