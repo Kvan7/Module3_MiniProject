@@ -12,7 +12,7 @@ public class PlayerScaler : MonoBehaviour
 	public float largeScale = 2f; // The scale for being "really big"
 	public Transform smallStartLocation;
 	public Transform bigStartLocation;
-	private bool isBig = false; // Initial size state
+	public bool isBig { get; private set; } = false; // Initial size state
 	private Vector3 bigLocation;
 	private Vector3 smallLocation;
 	private TeleportArea[] smallTeleportZones;

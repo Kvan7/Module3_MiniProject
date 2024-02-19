@@ -4,7 +4,12 @@ using Valve.VR.InteractionSystem;
 public class DynamicTeleportArea : MonoBehaviour
 {
 	// Assuming each side of the cube has a child object with a TeleportArea component
-	public TeleportArea[] sides; // Assign in inspector
+	private TeleportArea[] sides; // Assign in inspector
+	public PlayerScaler playerScaler; // Assign in inspector
+	private void Start()
+	{
+		sides = GetComponentsInChildren<TeleportArea>(true);
+	}
 
 	void Update()
 	{
@@ -17,7 +22,7 @@ public class DynamicTeleportArea : MonoBehaviour
 		Debug.Log("Top side index: " + topSideIndex);
 		for (int i = 0; i < sides.Length; i++)
 		{
-			sides[i].locked = i != topSideIndex;
+			sides[i].locked = i != topSideIndex || playerScaler.isBig;
 		}
 	}
 
