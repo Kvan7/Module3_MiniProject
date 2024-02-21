@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class AttachDriver : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class AttachDriver : MonoBehaviour
 	public void AttachDriverToPlayer()
 	{
 		driverEquipped.SetActive(true);
+		gameObject.GetComponent<Interactable>().attachedToHand.DetachObject(gameObject);
 		gameObject.SetActive(false);
 	}
 }

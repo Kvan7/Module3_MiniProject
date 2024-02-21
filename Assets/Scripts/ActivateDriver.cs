@@ -14,6 +14,7 @@ public class ActivateDriver : MonoBehaviour
 
 	public void ShowDriver()
 	{
+		Debug.Log("ShowDriver");
 		if (!shelfDriver.activeSelf)
 		{
 			ventDriver.SetActive(true);
