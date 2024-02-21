@@ -1,7 +1,10 @@
+using System;
 using System.Linq;
 using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.UI;
+using Valve.VR;
 using Valve.VR.InteractionSystem;
 
 public class PlayerScaler : MonoBehaviour
@@ -18,6 +21,8 @@ public class PlayerScaler : MonoBehaviour
 	private TeleportArea[] smallTeleportZones;
 	private TeleportArea[] bigTeleportZones;
 	private TeleportArea[] movableTeleportZones;
+	public SteamVR_Action_Boolean changeSize = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("default", "SizeChange");
+
 	private void Start()
 	{
 		bigLocation = bigStartLocation.position;
@@ -37,12 +42,25 @@ public class PlayerScaler : MonoBehaviour
 			.ToArray();
 		ChangeTeleportZones(isBig);
 		ToggleInteractable(isBig);
+		// changeSize.onStateDown += ToggleSize;
+
 	}
+
+	// private void ToggleSize(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+	// {
+	// 	Debug.Log("Toggling size from action");
+	// 	ToggleSize();
+	// }
 
 	void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space)) // Change KeyCode.Space to your desired input
 		{
+			ToggleSize();
+		}
+		if (changeSize.GetStateDown(SteamVR_Input_Sources.Any))
+		{
+			// Debug.Log("Toggling size from input source");
 			ToggleSize();
 		}
 	}
@@ -75,6 +93,7 @@ public class PlayerScaler : MonoBehaviour
 	{
 		foreach (TeleportArea zone in smallTeleportZones)
 		{
+			Debug.Log(zone);
 			zone.SetLocked(isBig);
 		}
 		foreach (TeleportArea zone in bigTeleportZones)

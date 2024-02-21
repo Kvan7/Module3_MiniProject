@@ -19,7 +19,6 @@ public class DynamicTeleportArea : MonoBehaviour
 	void UpdateTeleportableSide()
 	{
 		int topSideIndex = GetTopSideIndex();
-		Debug.Log("Top side index: " + topSideIndex);
 		for (int i = 0; i < sides.Length; i++)
 		{
 			sides[i].locked = i != topSideIndex || playerScaler.isBig;
