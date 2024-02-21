@@ -201,7 +201,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d1cff26ca25d0294ca0c1882c5f8fdd2,
         type: 3}
       propertyPath: m_Name
-      value: bookUV (2)
+      value: bookUV
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d1cff26ca25d0294ca0c1882c5f8fdd2,
         type: 3}
@@ -315,7 +315,7 @@ MonoBehaviour:
   snapAttachEaseInCompleted: 0
   skeletonPoser: {fileID: 0}
   handFollowTransform: 1
-  highlightOnHover: 1
+  highlightOnHover: 0
   hideHighlight: []
   hoverPriority: 0
 --- !u!54 &973517352034825028
