@@ -15,6 +15,10 @@ public class PlayerScaler : MonoBehaviour
 	public float largeScale = 2f; // The scale for being "really big"
 	public Transform smallStartLocation;
 	public Transform bigStartLocation;
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	public GameObject? smallPositionMarker;
+	public GameObject? bigPositionMarker;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public bool isBig { get; private set; } = false; // Initial size state
 	private Vector3 bigLocation;
 	private Vector3 smallLocation;
@@ -26,6 +30,7 @@ public class PlayerScaler : MonoBehaviour
 	private void Start()
 	{
 		bigLocation = bigStartLocation.position;
+		SetMarkers(isBig);
 		vrRig.position = smallStartLocation.position;
 		ChangeSize(smallScale);
 
@@ -78,7 +83,6 @@ public class PlayerScaler : MonoBehaviour
 
 	private void ToggleInteractable(bool isBig)
 	{
-		Debug.Log("isBig:" + isBig);
 		foreach (ActuallyThrowable throwable in FindObjectsOfType<ActuallyThrowable>())
 		{
 			if (!throwable.gameObject.CompareTag("SmallInteract"))
@@ -89,11 +93,35 @@ public class PlayerScaler : MonoBehaviour
 		}
 	}
 
+	private void SetMarkers(bool isBig)
+	{
+		if (isBig)
+		{
+			bigPositionMarker?.SetActive(false);
+			smallPositionMarker?.SetActive(true);
+			// Put marker where player was
+			if (smallPositionMarker != null)
+			{
+				smallPositionMarker.transform.position = vrRig.position;
+			}
+		}
+		else
+		{
+			bigPositionMarker?.SetActive(true);
+			smallPositionMarker?.SetActive(false);
+			// Put marker where player was
+			if (bigPositionMarker != null)
+			{
+				bigPositionMarker.transform.position = vrRig.position;
+			}
+		}
+
+	}
+
 	private void ChangeTeleportZones(bool isBig)
 	{
 		foreach (TeleportArea zone in smallTeleportZones)
 		{
-			Debug.Log(zone);
 			zone.SetLocked(isBig);
 		}
 		foreach (TeleportArea zone in bigTeleportZones)
@@ -111,6 +139,7 @@ public class PlayerScaler : MonoBehaviour
 		isBig = !isBig;
 		ChangeTeleportZones(isBig);
 		ToggleInteractable(isBig);
+		SetMarkers(isBig);
 		if (isBig)
 		{
 			smallLocation = vrRig.position;
