@@ -7,15 +7,16 @@ public class ActivateDriver : MonoBehaviour
 	// Start is called before the first frame update
 	public GameObject ventDriver;
 	public GameObject shelfDriver;
+	private bool playerIsBig;
 	void Start()
 	{
 		ventDriver.SetActive(false);
+		playerIsBig = GameObject.Find("Player").GetComponent<PlayerScaler>().isBig;
 	}
 
 	public void ShowDriver()
 	{
-		Debug.Log("ShowDriver");
-		if (!shelfDriver.activeSelf)
+		if (!shelfDriver.activeSelf && (!playerIsBig || Application.isEditor))
 		{
 			ventDriver.SetActive(true);
 		}

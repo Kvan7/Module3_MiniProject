@@ -19,7 +19,7 @@ public class PlayerScaler : MonoBehaviour
 	public GameObject? smallPositionMarker;
 	public GameObject? bigPositionMarker;
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public bool isBig { get; private set; } = false; // Initial size state
+	public bool isBig { get; private set; } = true; // Initial size state
 	private Vector3 bigLocation;
 	private Vector3 smallLocation;
 	private TeleportArea[] smallTeleportZones;
@@ -29,10 +29,11 @@ public class PlayerScaler : MonoBehaviour
 
 	private void Start()
 	{
-		bigLocation = bigStartLocation.position;
+		vrRig.position = bigStartLocation.position;
+		smallLocation = smallStartLocation.position;
 		SetMarkers(isBig);
-		vrRig.position = smallStartLocation.position;
-		ChangeSize(smallScale);
+		smallPositionMarker.transform.position = smallLocation;
+		ChangeSize(largeScale);
 
 		smallTeleportZones = GameObject.FindGameObjectsWithTag("SmallTeleportZone")
 			.SelectMany(obj => obj.GetComponentsInChildren<TeleportArea>(true))

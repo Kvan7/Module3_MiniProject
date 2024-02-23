@@ -14,12 +14,30 @@ public class OpenVent : MonoBehaviour
 	public GameObject ventCover;
 	public GameObject teleportArea;
 	public GameObject teleportArea2;
+	private Interactable interactable;
+	private bool isVentOpen = false;
+	// private ActuallyThrowable throwable;
+	// Start is called before the first frame update
+	void Start()
+	{
+		interactable = gameObject.GetComponent<Interactable>();
+		// throwable = gameObject.GetComponent<ActuallyThrowable>();
+	}
 
+	private void HandHoverUpdate(Hand hand)
+	{
+		GrabTypes startingGrabType = hand.GetGrabStarting();
+		Debug.Log("HandHoverUpdate");
+		if (interactable.attachedToHand == null && startingGrabType != GrabTypes.None && !isVentOpen)
+		{
+			OpenTheVent();
+			isVentOpen = true;
+		}
+	}
 
 	public void OpenTheVent()
 	{
 		// Change the objects
-		Debug.Log("OpenTheVent");
 		screw.AddComponent<BoxCollider>();
 		screw.AddComponent<Rigidbody>();
 		screw2.AddComponent<BoxCollider>();
