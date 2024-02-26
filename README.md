@@ -1,6 +1,8 @@
-# Miniproject
+# Buger President
 
+## Description
 
+Burger President is a short exploration/adventure game, where you are both a human worker and a rat. You must help the rat escape the room out the vent. The main twist is that you can switch between being human sized as the human and rat sized as the rat, to help them escape. The human must create a path for the rat to be able to open and escape through the vent. 
 
 
 ## Ella's resources:
@@ -11,13 +13,11 @@
 
 Hurdles:
 
--The particle system would not work to use a mesh collider and have the particles bounce onto the mesh collider of the vent
-       
-       -So we opted for an end win screen that is towards the back of the vent
+- The particle system would not work to use a mesh collider and have the particles bounce onto the mesh collider of the vent
+       - So we opted for an end win screen that is towards the back of the vent
 
--Making a clear instruction for the players
-      
-       -We made a clipboard on the desk with instructions
+- Making a clear instruction for the players
+      - We made a clipboard on the desk with instructions
 
 ## Garrett 
 
